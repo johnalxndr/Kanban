@@ -6,6 +6,8 @@
 - [Tailwind CSS v4](https://tailwindcss.com) 
 - [shadcn/ui](https://ui.shadcn.com) 
 - [Matsu Theme](https://matsu-theme.vercel.app)
+- [dnd kit](https://dndkit.com) 
+
 
 ## Getting Started
 
