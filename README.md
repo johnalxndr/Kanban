@@ -2,10 +2,10 @@
 
 ## Tech Stack
 
-- [Next.js](https://nextjs.org) - React framework for production
-- [Tailwind CSS v4](https://tailwindcss.com) - Utility-first CSS framework
-- [shadcn/ui](https://ui.shadcn.com) - Re-usable components built with Radix UI and Tailwind CSS
-- [Matsu Theme](https://matsu-theme.vercel.app) - Beautiful and minimal theme system
+- [Next.js 15](https://nextjs.org)
+- [Tailwind CSS v4](https://tailwindcss.com) 
+- [shadcn/ui](https://ui.shadcn.com) 
+- [Matsu Theme](https://matsu-theme.vercel.app)
 
 ## Getting Started
 
