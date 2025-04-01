@@ -306,7 +306,7 @@ export default function KanbanBoard() {
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-2xl font-bold text-foreground">KanBan</h1>
         <a
-          href="https://github.com/yourusername/kanban"
+          href="https://github.com/johnalxndr/Kanban"
           target="_blank"
           rel="noopener noreferrer"
           className="text-sm text-muted-foreground hover:text-foreground transition-colors"
