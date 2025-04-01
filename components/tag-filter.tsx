@@ -36,10 +36,6 @@ export default function TagFilter({ availableTags, selectedTags, setSelectedTags
     }
   }
 
-  const clearFilters = () => {
-    setSelectedTags([])
-  }
-
   const handleAddNewTag = (tagName: string) => {
     onAddTag(tagName)
     setIsCreatingNew(false)
@@ -108,7 +104,7 @@ export default function TagFilter({ availableTags, selectedTags, setSelectedTags
                     onClick={() => setIsCreatingNew(true)}
                   >
                     <Plus className="h-3 w-3 mr-2" />
-                    Create "{commandInput}"
+                    Create &quot;{commandInput}&quot;
                   </Button>
                 </div>
               )}
@@ -146,14 +142,6 @@ export default function TagFilter({ availableTags, selectedTags, setSelectedTags
           {isCreatingNew && (
             <div className="border-t">
               <CreateNewItem type="tag" onAdd={handleAddNewTag} onCancel={() => setIsCreatingNew(false)} />
-            </div>
-          )}
-
-          {selectedTags.length > 0 && !isCreatingNew && (
-            <div className="border-t p-2">
-              <Button variant="ghost" size="sm" className="w-full text-xs justify-center" onClick={clearFilters}>
-                Clear all
-              </Button>
             </div>
           )}
         </Command>

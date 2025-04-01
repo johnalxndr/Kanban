@@ -41,10 +41,6 @@ export default function ProjectFilter({
     }
   }
 
-  const clearFilters = () => {
-    setSelectedProjects([])
-  }
-
   const handleAddNewProject = (projectName: string) => {
     onAddProject(projectName)
     setIsCreatingNew(false)
@@ -113,7 +109,7 @@ export default function ProjectFilter({
                     onClick={() => setIsCreatingNew(true)}
                   >
                     <Plus className="h-3 w-3 mr-2" />
-                    Create "{commandInput}"
+                    Create &quot;{commandInput}&quot;
                   </Button>
                 </div>
               )}
@@ -151,14 +147,6 @@ export default function ProjectFilter({
           {isCreatingNew && (
             <div className="border-t">
               <CreateNewItem type="project" onAdd={handleAddNewProject} onCancel={() => setIsCreatingNew(false)} />
-            </div>
-          )}
-
-          {selectedProjects.length > 0 && !isCreatingNew && (
-            <div className="border-t p-2">
-              <Button variant="ghost" size="sm" className="w-full text-xs justify-center" onClick={clearFilters}>
-                Clear all
-              </Button>
             </div>
           )}
         </Command>

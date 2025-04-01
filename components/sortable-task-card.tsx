@@ -2,18 +2,16 @@
 
 import { useSortable } from "@dnd-kit/sortable"
 import { CSS } from "@dnd-kit/utilities"
-import type { Task, User, Column } from "@/lib/types"
+import type { Task} from "@/lib/types"
 import TaskCard from "./task-card"
 
 interface SortableTaskCardProps {
   task: Task
-  users: User[]
-  columns?: Column[] // Add columns prop
   onDelete: (id: string) => void
   onEdit?: (task: Task) => void // Add onEdit prop
 }
 
-export default function SortableTaskCard({ task, users, columns, onDelete, onEdit }: SortableTaskCardProps) {
+export default function SortableTaskCard({ task, onDelete, onEdit }: SortableTaskCardProps) {
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
     id: task.id,
     data: {
@@ -32,8 +30,6 @@ export default function SortableTaskCard({ task, users, columns, onDelete, onEdi
     <div ref={setNodeRef} style={style} {...attributes} {...listeners}>
       <TaskCard
         task={task}
-        users={users}
-        columns={columns}
         onDelete={onDelete}
         onEdit={onEdit}
         isDragging={isDragging}

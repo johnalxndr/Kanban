@@ -2,28 +2,24 @@
 
 import { useDroppable } from "@dnd-kit/core"
 import { SortableContext, verticalListSortingStrategy } from "@dnd-kit/sortable"
-import type { Task, Column, User } from "@/lib/types"
+import type { Task, Column } from "@/lib/types"
 import SortableTaskCard from "./sortable-task-card"
 import QuickAddTask from "./quick-add-task"
 import ProgressCircle from "./progress-circle"
 
 interface KanbanColumnProps {
   column: Column
-  columns: Column[] // Add all columns for edit functionality
   tasks: Task[]
-  users: User[]
   onDeleteTask: (id: string) => void
   onAddTask: (task: Task) => void
-  onEditTask?: (task: Task) => void // Add edit task handler
+  onEditTask?: (task: Task) => void
   projects: string[]
   totalTasks: number
 }
 
 export default function KanbanColumn({
   column,
-  columns,
   tasks,
-  users,
   onDeleteTask,
   onAddTask,
   onEditTask,
@@ -63,8 +59,6 @@ export default function KanbanColumn({
               <SortableTaskCard
                 key={task.id}
                 task={task}
-                users={users}
-                columns={columns}
                 onDelete={onDeleteTask}
                 onEdit={onEditTask}
               />

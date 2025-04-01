@@ -3,47 +3,37 @@
 import { MoreVertical, Pencil, Trash2 } from "lucide-react"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
-import type { Task, User, Column } from "@/lib/types"
+import type { Task } from "@/lib/types"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
+import { Card, CardContent } from "@/components/ui/card"
 
 interface TaskCardProps {
   task: Task
-  users: User[]
-  columns?: Column[] // Add columns prop for edit functionality
   onDelete: (id: string) => void
-  onEdit?: (task: Task) => void // Add onEdit prop
+  onEdit?: (task: Task) => void
   isDragging?: boolean
 }
 
-export default function TaskCard({ task, users, columns, onDelete, onEdit, isDragging = false }: TaskCardProps) {
+export default function TaskCard({ task, onDelete, onEdit, isDragging = false }: TaskCardProps) {
   // Check if the task is in the "done" column
   const isDone = task.columnId === "done"
 
   return (
-    <div
-      className={`bg-card rounded border border-border overflow-hidden ${isDragging ? "shadow-lg" : ""} ${
+    <Card
+      className={`overflow-hidden p-0 ${isDragging ? "shadow-lg" : ""} ${
         isDone ? "opacity-80 bg-muted" : ""
       }`}
     >
-      <div className="p-3 space-y-2">
+      <CardContent className="p-3 space-y-2">
         <div className="flex justify-between items-start">
-          <TooltipProvider>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <h3
-                  className={`font-medium text-foreground text-sm truncate max-w-[180px] ${
-                    isDone ? "line-through decoration-1 decoration-muted-foreground" : ""
-                  }`}
-                >
-                  {task.title}
-                </h3>
-              </TooltipTrigger>
-              <TooltipContent side="top" align="start">
-                <p className="text-xs">{task.title}</p>
-              </TooltipContent>
-            </Tooltip>
-          </TooltipProvider>
+          <h3
+            className={`font-medium text-foreground text-sm truncate max-w-[180px] ${
+              isDone ? "line-through decoration-1 decoration-muted-foreground" : ""
+            }`}
+            title={task.title}
+          >
+            {task.title}
+          </h3>
           <span className="text-xs text-muted-foreground ml-2 shrink-0">{task.project}</span>
         </div>
 
@@ -77,8 +67,8 @@ export default function TaskCard({ task, users, columns, onDelete, onEdit, isDra
             </DropdownMenuContent>
           </DropdownMenu>
         </div>
-      </div>
-    </div>
+      </CardContent>
+    </Card>
   )
 }
 

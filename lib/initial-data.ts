@@ -1,4 +1,4 @@
-import type { Column, Task, User } from "./types"
+import type { Column, Task } from "./types"
 
 export const initialData = {
   columns: [
@@ -7,54 +7,36 @@ export const initialData = {
     { id: "done", title: "Done", order: 2 },
   ] as Column[],
 
-  users: [{ id: "user-1", name: "Omar Geidt", avatar: "/placeholder.svg?height=32&width=32" }] as User[],
-
   tasks: [
     {
       id: "task-1",
-      title: "Implement authentication",
+      title: "setup analytics",
       columnId: "backlog",
-      project: "Studio",
+      project: "Kanban",
       tags: ["Feature"],
       createdAt: new Date().toISOString(),
     },
     {
       id: "task-2",
-      title: "Fix navigation bug",
+      title: "setup feedback component",
       columnId: "backlog",
-      project: "Studio",
+      project: "Kanban",
       tags: ["Bug"],
       createdAt: new Date().toISOString(),
     },
     {
-      id: "task-3",
-      title: "Update API documentation",
-      columnId: "backlog",
-      project: "Studio",
-      tags: ["Documentation"],
-      createdAt: new Date().toISOString(),
-    },
-    {
-      id: "task-4",
-      title: "Implement user profile page",
-      columnId: "in-progress",
-      project: "Studio",
-      tags: ["Feature"],
-      createdAt: new Date().toISOString(),
-    },
-    {
       id: "task-5",
-      title: "Fix login form validation",
+      title: "Post on X",
       columnId: "in-progress",
-      project: "Studio",
+      project: "Kanban",
       tags: ["Bug"],
       createdAt: new Date().toISOString(),
     },
     {
       id: "task-6",
-      title: "Add unit tests",
+      title: "Record Video",
       columnId: "done",
-      project: "Studio",
+      project: "Kanban",
       tags: ["Feature"],
       createdAt: new Date().toISOString(),
     },
@@ -62,7 +44,7 @@ export const initialData = {
       id: "task-7",
       title: "Update README",
       columnId: "done",
-      project: "Studio",
+      project: "Kanban",
       tags: ["Documentation"],
       createdAt: new Date().toISOString(),
     },

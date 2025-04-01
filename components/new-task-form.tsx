@@ -3,17 +3,15 @@
 import type React from "react"
 
 import { useState } from "react"
-import { Tag, X, Plus } from "lucide-react"
+import { Plus } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
-import { Badge } from "@/components/ui/badge"
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
 import {
   Command,
   CommandGroup,
-  CommandInput,
   CommandItem,
   CommandList,
 } from "@/components/ui/command"
@@ -157,7 +155,7 @@ export default function NewTaskForm({
 
       {/* Submit button */}
       <div className="flex justify-end pt-4">
-        <Button type="submit" className="rounded-full px-6">
+        <Button type="submit" className="px-6">
           Create task
         </Button>
       </div>

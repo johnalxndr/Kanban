@@ -3,13 +3,13 @@
 import type React from "react"
 
 import { useState } from "react"
-import { Tag, X, Plus } from "lucide-react"
+import { Plus } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
-import { Command, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command"
+import { Command, CommandGroup, CommandItem, CommandList } from "@/components/ui/command"
 import type { Task, Column } from "@/lib/types"
 import ProjectFilter from "./project-filter"
 import TagFilter from "./tag-filter"
@@ -146,10 +146,10 @@ export default function EditTaskForm({
 
       {/* Submit and Cancel buttons */}
       <div className="flex justify-end gap-2 pt-4">
-        <Button type="button" variant="outline" className="rounded-full px-6" onClick={onCancel}>
+        <Button type="button" variant="outline" className="px-6" onClick={onCancel}>
           Cancel
         </Button>
-        <Button type="submit" className="rounded-full px-6">
+        <Button type="submit" className="px-6">
           Save changes
         </Button>
       </div>

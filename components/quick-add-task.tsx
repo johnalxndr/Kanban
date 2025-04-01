@@ -28,7 +28,7 @@ export default function QuickAddTask({ columnId, onAddTask, projects }: QuickAdd
       id: uuidv4(),
       title,
       columnId,
-      project: projects[0], // Default project
+      project: projects.length > 0 ? projects[0] : "", // Only use first project if available
       tags: [],
       createdAt: new Date().toISOString(),
     }
@@ -53,7 +53,7 @@ export default function QuickAddTask({ columnId, onAddTask, projects }: QuickAdd
           <Button type="submit" size="sm">
             Add
           </Button>
-          <Button type="button" variant="ghost" size="sm" onClick={() => setIsExpanded(false)}>
+          <Button type="button" variant="outline" size="sm" onClick={() => setIsExpanded(false)}>
             Cancel
           </Button>
         </form>

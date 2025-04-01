@@ -14,24 +14,22 @@ import {
 } from "@dnd-kit/core"
 import { arrayMove } from "@dnd-kit/sortable"
 import { restrictToWindowEdges } from "@dnd-kit/modifiers"
-import { Plus, Settings } from "lucide-react"
+import { Settings } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
-import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog"
 import KanbanColumn from "./kanban-column"
 import TaskCard from "./task-card"
-import NewTaskForm from "./new-task-form"
-import EditTaskForm from "./edit-task-form"
 import TagFilter from "./tag-filter"
 import ProjectFilter from "./project-filter"
 import SettingsSheet from "./settings-sheet"
-import type { Task, Column, User } from "@/lib/types"
+import CreateTaskDialog from "./create-task-dialog"
+import EditTaskDialog from "./edit-task-dialog"
+import type { Task, Column } from "@/lib/types"
 import { initialData } from "@/lib/initial-data"
 
 export default function KanbanBoard() {
   const [columns, setColumns] = useState<Column[]>([])
   const [tasks, setTasks] = useState<Task[]>([])
-  const [users, setUsers] = useState<User[]>([])
   const [activeId, setActiveId] = useState<string | null>(null)
   const [activeTask, setActiveTask] = useState<Task | null>(null)
   const [selectedTags, setSelectedTags] = useState<string[]>([])
@@ -55,7 +53,7 @@ export default function KanbanBoard() {
     // Load data from localStorage or use initial data
     const savedData = localStorage.getItem("kanbanData")
     if (savedData) {
-      const { columns, tasks, users, customTags = [], customProjects = [] } = JSON.parse(savedData)
+      const { columns, tasks, customTags = [], customProjects = [] } = JSON.parse(savedData)
 
       // Ensure tasks have order property
       const tasksWithOrder = tasks.map((task: Task, index: number) => ({
@@ -65,7 +63,6 @@ export default function KanbanBoard() {
 
       setColumns(columns)
       setTasks(tasksWithOrder)
-      setUsers(users)
       setCustomTags(customTags)
       setCustomProjects(customProjects)
     } else {
@@ -77,7 +74,6 @@ export default function KanbanBoard() {
 
       setColumns(initialData.columns)
       setTasks(tasksWithOrder)
-      setUsers(initialData.users)
     }
   }, [])
 
@@ -89,13 +85,12 @@ export default function KanbanBoard() {
         JSON.stringify({
           columns,
           tasks,
-          users,
           customTags,
           customProjects,
         }),
       )
     }
-  }, [columns, tasks, users, customTags, customProjects])
+  }, [columns, tasks, customTags, customProjects])
 
   // Get all unique tags from tasks and custom tags
   const availableTags = useMemo(() => {
@@ -294,34 +289,13 @@ export default function KanbanBoard() {
 
   // Settings actions
   const handleClearAllData = () => {
-    // Reset to initial data
-    const tasksWithOrder = initialData.tasks.map((task, index) => ({
-      ...task,
-      order: index,
-    }))
-    setColumns(initialData.columns)
-    setTasks(tasksWithOrder)
-    setCustomTags([])
-    setCustomProjects([])
-    setSelectedTags([])
-    setSelectedProjects([])
-    setSettingsSheetOpen(false)
-  }
-
-  const handleClearTasks = () => {
-    setTasks([])
-    setSettingsSheetOpen(false)
-  }
-
-  const handleClearTags = () => {
-    setCustomTags([])
-    setSelectedTags([])
-    setSettingsSheetOpen(false)
-  }
-
-  const handleClearProjects = () => {
-    setCustomProjects([])
-    setSelectedProjects([])
+    // Clear all data
+    setColumns(initialData.columns) // Keep default columns
+    setTasks([]) // Clear all tasks
+    setCustomTags([]) // Clear all custom tags
+    setCustomProjects([]) // Clear all custom projects
+    setSelectedTags([]) // Clear tag filters
+    setSelectedProjects([]) // Clear project filters
     setSettingsSheetOpen(false)
   }
 
@@ -332,6 +306,17 @@ export default function KanbanBoard() {
     <div className="flex flex-col h-full">
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-2xl font-bold text-foreground">KanBan</h1>
+        <a
+          href="https://github.com/yourusername/kanban"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-sm text-muted-foreground hover:text-foreground transition-colors"
+        >
+          GitHub
+        </a>
+      </div>
+
+      <div className="flex items-center justify-between gap-4 mb-6">
         <div className="flex items-center gap-2">
           <TagFilter
             availableTags={availableTags}
@@ -345,24 +330,18 @@ export default function KanbanBoard() {
             setSelectedProjects={setSelectedProjects}
             onAddProject={handleAddProject}
           />
-          <Dialog open={createDialogOpen} onOpenChange={setCreateDialogOpen}>
-            <DialogTrigger asChild>
-              <Button size="sm" variant="outline">
-                <Plus className="h-4 w-4 mr-2" />
-                Task
-              </Button>
-            </DialogTrigger>
-            <DialogContent className="sm:max-w-[550px]">
-              <NewTaskForm
-                columns={columns}
-                onAddTask={addNewTask}
-                availableTags={availableTags}
-                availableProjects={availableProjects}
-                onAddTag={handleAddTag}
-                onAddProject={handleAddProject}
-              />
-            </DialogContent>
-          </Dialog>
+        </div>
+        <div className="flex items-center gap-2">
+          <CreateTaskDialog
+            open={createDialogOpen}
+            onOpenChange={setCreateDialogOpen}
+            columns={columns}
+            availableTags={availableTags}
+            availableProjects={availableProjects}
+            onAddTask={addNewTask}
+            onAddTag={handleAddTag}
+            onAddProject={handleAddProject}
+          />
           <Button size="sm" variant="outline" onClick={() => setSettingsSheetOpen(true)}>
             <Settings className="h-4 w-4" />
             <span className="sr-only">Settings</span>
@@ -375,31 +354,20 @@ export default function KanbanBoard() {
         open={settingsSheetOpen}
         onOpenChange={setSettingsSheetOpen}
         onClearAllData={handleClearAllData}
-        onClearTasks={handleClearTasks}
-        onClearTags={handleClearTags}
-        onClearProjects={handleClearProjects}
       />
 
       {/* Edit Task Dialog */}
-      <Dialog open={editDialogOpen} onOpenChange={setEditDialogOpen}>
-        <DialogContent className="sm:max-w-[550px]">
-          {taskToEdit && (
-            <EditTaskForm
-              task={taskToEdit}
-              columns={columns}
-              availableProjects={availableProjects}
-              availableTags={availableTags}
-              onUpdateTask={updateTask}
-              onCancel={() => {
-                setEditDialogOpen(false)
-                setTaskToEdit(null)
-              }}
-              onAddProject={handleAddProject}
-              onAddTag={handleAddTag}
-            />
-          )}
-        </DialogContent>
-      </Dialog>
+      <EditTaskDialog
+        open={editDialogOpen}
+        onOpenChange={setEditDialogOpen}
+        task={taskToEdit}
+        columns={columns}
+        availableTags={availableTags}
+        availableProjects={availableProjects}
+        onUpdateTask={updateTask}
+        onAddTag={handleAddTag}
+        onAddProject={handleAddProject}
+      />
 
       <DndContext
         sensors={sensors}
@@ -409,33 +377,39 @@ export default function KanbanBoard() {
         onDragEnd={handleDragEnd}
       >
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          {columns.map((column) => {
-            const columnTasks = tasksByColumn[column.id] || []
-            return (
-              <KanbanColumn
-                key={column.id}
-                column={column}
-                columns={columns}
-                tasks={columnTasks}
-                users={users}
-                onDeleteTask={deleteTask}
-                onAddTask={addNewTask}
-                onEditTask={handleEditTask}
-                projects={availableProjects.length > 0 ? availableProjects : ["Studio"]}
-                totalTasks={totalFilteredTasks}
-              />
-            )
-          })}
+          {columns.map((column) => (
+            <KanbanColumn
+              key={column.id}
+              column={column}
+              tasks={tasksByColumn[column.id] || []}
+              onDeleteTask={deleteTask}
+              onAddTask={addNewTask}
+              onEditTask={handleEditTask}
+              projects={availableProjects}
+              totalTasks={totalFilteredTasks}
+            />
+          ))}
         </div>
 
         <DragOverlay modifiers={[restrictToWindowEdges]}>
           {activeId && activeTask ? (
             <div className="opacity-80">
-              <TaskCard task={activeTask} users={users} onDelete={() => {}} isDragging={true} />
+              <TaskCard task={activeTask} onDelete={() => {}} isDragging={true} />
             </div>
           ) : null}
         </DragOverlay>
       </DndContext>
+
+      <footer className="mt-1 pt-3 pb-3 text-center text-sm text-muted-foreground">
+        <a
+          href="https://johnalexander.work"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="hover:text-foreground transition-colors"
+        >
+          ❤️ Made by John Alexander
+        </a>
+      </footer>
     </div>
   )
 }
