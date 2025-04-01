@@ -157,7 +157,6 @@ export default function KanbanBoard() {
     const activeTaskId = active.id as string
     const overId = over.id as string
 
-    // Find the task being dragged
     const activeTask = tasks.find((task) => task.id === activeTaskId)
 
     if (!activeTask) return

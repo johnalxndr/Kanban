@@ -21,7 +21,7 @@ pnpm dev
 bun dev
 ```
 
-## Theme Customization
+## Theme Customization & Adding New Components
 
 This project uses the Matsu theme system. To add more themed components:
 1. Visit [Matsu Theme](https://matsu-theme.vercel.app)
