@@ -1,5 +1,6 @@
 "use client"
 
+import { memo } from "react"
 import { MoreVertical, Pencil, Trash2 } from "lucide-react"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
@@ -14,7 +15,7 @@ interface TaskCardProps {
   isDragging?: boolean
 }
 
-export default function TaskCard({ task, onDelete, onEdit, isDragging = false }: TaskCardProps) {
+const TaskCard = memo(function TaskCard({ task, onDelete, onEdit, isDragging = false }: TaskCardProps) {
   // Check if the task is in the "done" column
   const isDone = task.columnId === "done"
 
@@ -70,5 +71,7 @@ export default function TaskCard({ task, onDelete, onEdit, isDragging = false }:
       </CardContent>
     </Card>
   )
-}
+})
+
+export default TaskCard
 

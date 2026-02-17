@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect, useMemo } from "react"
+import { useState, useEffect, useMemo, useCallback } from "react"
 import {
   DndContext,
   DragOverlay,
@@ -40,6 +40,8 @@ export default function KanbanBoard() {
   const [taskToEdit, setTaskToEdit] = useState<Task | null>(null)
   const [customTags, setCustomTags] = useState<string[]>([])
   const [customProjects, setCustomProjects] = useState<string[]>([])
+
+  const noop = useCallback(() => {}, [])
 
   const sensors = useSensors(
     useSensor(PointerSensor, {
@@ -249,42 +251,44 @@ export default function KanbanBoard() {
     setActiveTask(null)
   }
 
-  const addNewTask = (newTask: Task) => {
+  const addNewTask = useCallback((newTask: Task) => {
     // Find the highest order in the target column
-    const columnTasks = tasks.filter((task) => task.columnId === newTask.columnId)
-    const highestOrder = columnTasks.length > 0 ? Math.max(...columnTasks.map((task) => task.order || 0)) + 1 : 0
-
-    // Add the new task with the correct order
-    setTasks([...tasks, { ...newTask, order: highestOrder }])
+    setTasks((prev) => {
+      const columnTasks = prev.filter((task) => task.columnId === newTask.columnId)
+      const highestOrder = columnTasks.length > 0 ? Math.max(...columnTasks.map((task) => task.order || 0)) + 1 : 0
+      return [...prev, { ...newTask, order: highestOrder }]
+    })
     setCreateDialogOpen(false)
-  }
+  }, [])
 
-  const deleteTask = (taskId: string) => {
-    setTasks(tasks.filter((task) => task.id !== taskId))
-  }
+  const deleteTask = useCallback((taskId: string) => {
+    setTasks((prev) => prev.filter((task) => task.id !== taskId))
+  }, [])
 
-  const handleEditTask = (task: Task) => {
+  const handleEditTask = useCallback((task: Task) => {
     setTaskToEdit(task)
     setEditDialogOpen(true)
-  }
+  }, [])
 
-  const updateTask = (updatedTask: Task) => {
-    setTasks(tasks.map((task) => (task.id === updatedTask.id ? updatedTask : task)))
+  const updateTask = useCallback((updatedTask: Task) => {
+    setTasks((prev) => prev.map((task) => (task.id === updatedTask.id ? updatedTask : task)))
     setEditDialogOpen(false)
     setTaskToEdit(null)
-  }
+  }, [])
 
-  const handleAddTag = (tag: string) => {
-    if (!availableTags.includes(tag)) {
-      setCustomTags([...customTags, tag])
-    }
-  }
+  const handleAddTag = useCallback((tag: string) => {
+    setCustomTags((prev) => {
+      if (prev.includes(tag)) return prev
+      return [...prev, tag]
+    })
+  }, [])
 
-  const handleAddProject = (project: string) => {
-    if (!availableProjects.includes(project)) {
-      setCustomProjects([...customProjects, project])
-    }
-  }
+  const handleAddProject = useCallback((project: string) => {
+    setCustomProjects((prev) => {
+      if (prev.includes(project)) return prev
+      return [...prev, project]
+    })
+  }, [])
 
   // Settings actions
   const handleClearAllData = () => {
@@ -393,7 +397,7 @@ export default function KanbanBoard() {
         <DragOverlay modifiers={[restrictToWindowEdges]}>
           {activeId && activeTask ? (
             <div className="opacity-80">
-              <TaskCard task={activeTask} onDelete={() => {}} isDragging={true} />
+              <TaskCard task={activeTask} onDelete={noop} isDragging={true} />
             </div>
           ) : null}
         </DragOverlay>

@@ -1,5 +1,6 @@
 "use client"
 
+import { memo, useMemo } from "react"
 import { useDroppable } from "@dnd-kit/core"
 import { SortableContext, verticalListSortingStrategy } from "@dnd-kit/sortable"
 import type { Task, Column } from "@/lib/types"
@@ -17,7 +18,7 @@ interface KanbanColumnProps {
   totalTasks: number
 }
 
-export default function KanbanColumn({
+const KanbanColumn = memo(function KanbanColumn({
   column,
   tasks,
   onDeleteTask,
@@ -29,6 +30,9 @@ export default function KanbanColumn({
   const { setNodeRef } = useDroppable({
     id: `column-${column.id}`,
   })
+
+  // Memoize task IDs to avoid recreating the array on every render
+  const taskIds = useMemo(() => tasks.map((task) => task.id), [tasks])
 
   // Calculate percentage for the progress indicator (only for Done column)
   const isDoneColumn = column.id === "done"
@@ -53,7 +57,7 @@ export default function KanbanColumn({
       </div>
 
       <div className="flex-1 p-2 overflow-y-auto">
-        <SortableContext items={tasks.map((task) => task.id)} strategy={verticalListSortingStrategy}>
+        <SortableContext items={taskIds} strategy={verticalListSortingStrategy}>
           <div className="space-y-3">
             {tasks.map((task) => (
               <SortableTaskCard
@@ -70,5 +74,7 @@ export default function KanbanColumn({
       </div>
     </div>
   )
-}
+})
+
+export default KanbanColumn
 
